@@ -14,6 +14,7 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    settings.trusted-users = ["dyslexia"];
   };
 
   # Use the systemd-boot EFI boot loader.
@@ -24,9 +25,14 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.wireless.iwd = {
+    enable = true;
+    settings.Network.NameResolvingService = "systemd";
+  };
+  # WiFi PSK removed from history - was managed inline here, now via sops.
 
   # Set your time zone.
-  time.timeZone = "America/Chicago";
+  time.timeZone = "Europe/Paris";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -55,7 +61,7 @@
   services.k3s = {
     enable = true;
     role = "server";
-    tokenFile = /var/lib/rancher/k3s/server/token;
+    tokenFile = "/var/lib/rancher/k3s/server/token";
     extraFlags = toString ([
 	    "--write-kubeconfig-mode \"0644\""
 	    "--cluster-init"
@@ -84,16 +90,15 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.elliott = {
+  users.users.dyslexia = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
-    # Created using mkpasswd
-    hashedPassword = "$6$026yeBrVd8/z.7CJ$e9Fl5oMabKXM6fRC0V7kG/LCZnCyunekKLY4T3Vi/zQXV7PpOcTchDpxr0opnI3zA4.2V9yyu51h1tF.4UoHT1";
+    # hashedPassword removed from history - set locally, not committed.
     openssh.authorizedKeys.keys = [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNFZUZg93LySz/1Qdg7WBEBdpnSMjJyJmFwnPikmTHJ/MQWC0Bf5kVyfkLxaU3paeRQnoI4RcG9k8DJGy8hnUdxe2Eg5fWtW0+cJ0zm791WisCTb8bCmTBO9053U59qOA7WTrJAVcTylBsBa7R3CGs6FYlMsu8CXvUWrp4XQ2k83DQlzpgr5r9BNIsfbfswXMSm91i/bRSuxSXu2QpV/9C4wHBUYAGz+hTFw8LJgt/lH6ute2w1ed93/vG4CNI9gv1obecc8rrVGvjZk1Q6sPr8PamBxc7Y4HEYWKPtJPq54UK+b2duUuL2tDYVQmJIvto6how+EZ/oAPxMRK5qHJOn2AJ/z0rcPO6FqyggtKeZATOgFCYSNLLrEwiYvppVNiM/hjFRqpk+BZ+gWE1X+D3xXIDUG1jchMCUQ/2q62CSp/VU/z39IGBxa9eN/k6WsmdlKgeCcx2BtoFKMd0LQqfndduYPcnvn2EzJwLrF0p7LQGIO74jkAQ451IeSoDOvlCe9Y9LAjwH1DG4ve7XwuqpKdJ2LcHirLHxQIONdc906U70TVuQzGOJed5huhKBkbGzDi08VsF8zCO9pMHSJ2ioBWVyNSRUf9wVKtPtUFhmgCHT/l0+xdrCeE8m7sT0Zb8qNjdMDylXQhaPm30f/ievIBe5+81w0Kyoj4kFSzr3Q== cardno:11_070_772"
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDULotEi1WrIjt0HlXFnCiCH0hfZWWhT4xSeU2uq9ddFJZAOJbQYiKJJ5YH2HSOx7CN1DhT/GBBhT/A3twbjrPnkj2o9RlMqPrST2/df95BzZugJOe4sJwWGPyJu9RiiIx77ZjWN3GonR2rcN97rhj4RPWSsQrLJm+4b6fzUroyXc7qODOycsgqeRwfikQE04//5Svi6xAkcVvqesKHFLgu4vJLN6e/+TBvUr9lZjoXSRRGbtTemtx29w2h1QshkuchibPcTj29NnAsiN/MOauAbTc7h0zdetyR0fEzB+sELqZNH+RayBhhxujgc7+Hj7ENIwhFBvdo21sMwBgYeYMXNhi6Huzpr0JYvVmW51J2+XCEW5tIYiVlXDlvHj87VILpoM2zMwvYIgOmbai5IwUM0PZ2nbKtNY/bo/0cyrEk5jpFJq7FZ4sQKFhqyIPP4L9rA9+FlcqVakjVZ3Hvl3a5Ad/zUadIE8hcStJ5JFiNgBn4jwWs+cdhCFFilznDnAV48olAKNKb/peBM7zW8Mkrn3kA7cjHdDkbjsxx5VRG69ls+e6wvkf7DgWktv69sYYcaE+ED22WWvfyznsxdAJHpwzNIQJuUG/KLsY32eOmmLNH6Oz3Pj6qOCu414Xq6p65BYTJDZiSAD59bf442CX3rbvZhjSGUNkZbHywS0YRbQ== whood@thinkpad"
     ];
   };
 
