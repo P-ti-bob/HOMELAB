@@ -1,6 +1,6 @@
 ---
 DNS1:
-  192.168.0.1
+  192.168.1.254
 persistentVolumeClaim:
   enabled: true
 ingress:
@@ -8,12 +8,12 @@ ingress:
   hosts:
     - "pihole.home"
 serviceWeb:
-  loadBalancerIP: 192.168.1.250
+  loadBalancerIP: 192.168.1.3
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole-svc
   type: LoadBalancer
 serviceDns:
-  loadBalancerIP: 192.168.1.250
+  loadBalancerIP: 192.168.1.3
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole-svc
   type: LoadBalancer

@@ -21,29 +21,62 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # sops-nix
+  sops.defaultSopsFile = ./secrets/wifi.yaml;
+  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+  sops.secrets."wpa-psk" = {
+    owner = "root";
+    mode = "0400";
+  };
+
+  sops.secrets."k3s-token" = {
+    sopsFile = ./secrets/k3s-token.yaml;
+    owner = "root";
+    mode = "0400";
+  };
+
+  # Renders WIFI_PSK=<decrypted value> to an env file NetworkManager can
+  # source, so the psk never lands in the Nix store or configuration.nix.
+  sops.templates."wifi-env".content = ''
+    WIFI_PSK=${config.sops.placeholder."wpa-psk"}
+  '';
+
   networking.hostName = meta.hostname; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-  networking.wireless.iwd = {
-    enable = true;
-    settings.Network.NameResolvingService = "systemd";
-  };
-  # WiFi PSK removed from history - was managed inline here, now via sops.
+  networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";  # tells NM to use iwd, not wpa_supplicant
 
-  # Set your time zone.
+  networking.networkmanager.ensureProfiles.environmentFiles = [
+    config.sops.templates."wifi-env".path
+  ];
+
+  networking.networkmanager.ensureProfiles.profiles = {
+    "783F" = {
+      connection = {
+        id = "783F";
+        type = "wifi";
+        autoconnect = true;
+      };
+      wifi = {
+        mode = "infrastructure";
+        ssid = "783F";
+        hidden = true;
+      };
+      wifi-security = {
+        key-mgmt = "wpa-psk";
+        psk = "$WIFI_PSK";
+     };
+    };
+  };
+
   time.timeZone = "Europe/Paris";
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";
-    #useXkbConfig = true; # use xkb.options in tty.
   };
 
   # Fixes for longhorn
@@ -61,10 +94,9 @@
   services.k3s = {
     enable = true;
     role = "server";
-    tokenFile = "/var/lib/rancher/k3s/server/token";
+    tokenFile = config.sops.secrets."k3s-token".path;
     extraFlags = toString ([
 	    "--write-kubeconfig-mode \"0644\""
-	    "--cluster-init"
 	    "--disable servicelb"
 	    "--disable traefik"
 	    "--disable local-storage"
@@ -90,6 +122,7 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  security.sudo.wheelNeedsPassword = false;
   users.users.dyslexia = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.

@@ -1,0 +1,14 @@
+keys:
+  - &me       age1rkl3cj7zygwqma2fzfx3g9z7qf6tj4j5r7f6nteujr3a7ucfnfeq4zkwlw
+  - &homelab0 age1psq8q5zs3gzrlss3824vnnnjdmvdgqqvg2pwxrep7mn0ju35je8szvmmxe
+  - &homelab1 age1urw9fch8qu0z335k0cc42plwltwh3zh6ld4898vpn4y969py638qf3za95
+  - &homelab2 age1hz7w86dwqndrtux7pe85s5um82fe7acl5lxyjwvmzv7eallrdpcsdn990j
+
+creation_rules:
+  - path_regex: nixos/secrets/.*\.yaml$
+    key_groups:
+      - age: [*me, *homelab0, *homelab1, *homelab2]
+
+  - path_regex: helm/values/secrets/.*\.yaml$
+    key_groups:
+      - age: [*me]

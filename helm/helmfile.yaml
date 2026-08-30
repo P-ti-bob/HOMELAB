@@ -7,8 +7,8 @@ repositories:
     url: https://mojo2600.github.io/pihole-kubernetes/
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
+  - name: external-dns
+    url: https://kubernetes-sigs.github.io/external-dns/
 ---
 releases:
   # Distributed storage
@@ -30,6 +30,8 @@ releases:
     version: 2.18.0
     values:
       - ./values/pihole.values.yaml
+    secrets:
+      - ./values/secrets/pihole.secrets.yaml
 
   # Ingress for local network
   - name: ingress-nginx-internal
@@ -39,10 +41,12 @@ releases:
     values:
       - ./values/nginx-internal.values.yaml
 
-  # Automatic DNS for pihole
+  # DNS for pihole
   - name: externaldns-pihole
     namespace: pihole-system
-    chart: bitnami/external-dns
-    version: 8.0.1
+    chart: external-dns/external-dns
+    version: 1.15.0
     values:
       - ./values/externaldns.values.yaml
+    secrets:
+      - ./values/secrets/externaldns-pihole.secrets.yaml
