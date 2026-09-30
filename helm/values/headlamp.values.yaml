@@ -1,0 +1,9 @@
+---
+ingress:
+  enabled: true
+  ingressClassName: nginx-internal
+  hosts:
+    - host: headlamp.home
+      paths:
+        - path: /
+          type: ImplementationSpecific

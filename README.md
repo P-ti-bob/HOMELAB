@@ -1,7 +1,5 @@
 # Homelab
 
-This is the companion configuration that goes with the video from [Dreams of Autonomy](https://youtu.be/2yplBzPCghA).
-
 This project is split into different directories depending on each service used.
 
 ## Requirements
@@ -13,15 +11,15 @@ To use this, you'll need the following installed on your sysetm
 - helmfile
 - helm
 - git
-
-Additionally, you'll also want to make changes to the user information found in the `nixos/configuration.nix`
+- sops
+- opentofu/terraform
 
 ## nixos
 
 This directory contains the nixos configuration for setting
 up each node with k3s.
 
-The configuration makes use of nix flakes under the hood, with each node configuration being:
+The configuration makes use of nix flakes and is composed of 3 different instancies :
 
 ```
 homelab-0
@@ -29,9 +27,9 @@ homelab-1
 homelab-2
 ```
 
-To set up a node from fresh, you can use [nixos-anywhere](https://github.com/nix-community/nixos-anywhere). This requires loading the nixos installer and then booting the node into it. You can then install remotely once you've set the nodes password using the `passwd` command. 
+To set up a node from fresh, we use [nixos-anywhere](https://github.com/nix-community/nixos-anywhere). This requires loading the nixos installer and then booting the node into it. It allow to remotely install nixos once the password is set on the nodes using the `passwd` command. 
 
-The command I use is as follows:
+The command we use is as follows:
 
 ```shell
 nix run github:nix-community/nixos-anywhere \
@@ -57,3 +55,8 @@ helmfile apply
 Kustomize allows you to manage multiple manifest files in a `Kustomize.yaml`, which also allows you to override values if you need to.
 
 I don't use Kustomize that much in the video, but it's a tool I do often use and is available in `kubectl`.
+
+
+## TODO
+- [ ] update wifi and credentials
+- [ ] create the iac structure

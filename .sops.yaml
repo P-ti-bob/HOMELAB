@@ -12,3 +12,8 @@ creation_rules:
   - path_regex: helm/values/secrets/.*\.yaml$
     key_groups:
       - age: [*me]
+
+  - path_regex: iac/secrets/.*\.yaml$
+    key_groups:
+      - age: [*me]
+

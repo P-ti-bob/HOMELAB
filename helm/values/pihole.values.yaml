@@ -5,6 +5,7 @@ persistentVolumeClaim:
   enabled: true
 ingress:
   enabled: true
+  ingressClassName: nginx-internal
   hosts:
     - "pihole.home"
 serviceWeb:
