@@ -23,6 +23,11 @@ variable "ssh_public_key_path" {
   default = "~/.ssh/id_rsa.pub"
 }
 
+variable "root_disk_size" {
+  type    = number
+  default = 30 # Go
+}
+
 variable "vm_count" {
   type = number
 }

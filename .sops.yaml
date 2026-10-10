@@ -1,8 +1,8 @@
 keys:
   - &me       age1rkl3cj7zygwqma2fzfx3g9z7qf6tj4j5r7f6nteujr3a7ucfnfeq4zkwlw
-  - &homelab0 age1psq8q5zs3gzrlss3824vnnnjdmvdgqqvg2pwxrep7mn0ju35je8szvmmxe
-  - &homelab1 age1urw9fch8qu0z335k0cc42plwltwh3zh6ld4898vpn4y969py638qf3za95
-  - &homelab2 age1hz7w86dwqndrtux7pe85s5um82fe7acl5lxyjwvmzv7eallrdpcsdn990j
+  - &homelab0 age1ne7qnegacmfp7xkyf4zfl74xzjp8dw98erys2jq8ga28zen9sfhsx2keln
+  - &homelab1 age13kduefpqeq849nmk3ucd8skntnmh6qdz37z9e2lmzszyu4fndduqat2447
+  - &homelab2 age18f7dy6khwj6rkr86d7gwdur2jc6rxta08fvmu77mtjnu5anctu6s88cvwu
 
 creation_rules:
   - path_regex: nixos/secrets/.*\.yaml$
@@ -13,7 +13,7 @@ creation_rules:
     key_groups:
       - age: [*me]
 
-  - path_regex: iac/secrets/.*\.yaml$
+  - path_regex: terraform/secrets/.*\.yaml$
     key_groups:
       - age: [*me]
 
