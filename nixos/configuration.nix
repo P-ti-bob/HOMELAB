@@ -1,7 +1,7 @@
 { config, lib, pkgs, meta, ... }:
 
 {
-  imports = [];
+  imports = [ ./tailscale.nix ];
 
   nix = {
     extraOptions = ''
@@ -9,8 +9,6 @@
     '';
     settings.trusted-users = ["dyslexia"];
   };
-
-  boot.loader.grub.enable = true;
 
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 

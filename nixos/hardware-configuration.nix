@@ -11,6 +11,8 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
+  boot.loader.grub.enable = true;
+
   # Une seule interface (ens3), IP fournie par le DHCP du routeur virtuel CloudStack.
   networking.useDHCP = lib.mkDefault true;
 

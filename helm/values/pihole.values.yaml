@@ -6,6 +6,9 @@ persistentVolumeClaim:
 ingress:
   enabled: true
   ingressClassName: nginx-internal
+  annotations:
+    # the Pi-hole UI lives under /admin/ and the web root answers 403: send / there
+    nginx.ingress.kubernetes.io/app-root: /admin/
   hosts:
     - "pihole.home"
 serviceWeb:

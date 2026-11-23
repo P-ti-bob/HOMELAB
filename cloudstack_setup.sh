@@ -94,15 +94,19 @@ for h in "${!IPs[@]}"; do
   if is_nixos "$ip"; then
     echo "$host ($ip) already runs NixOS, skipping install"
     #apply config changes instead of reinstalling
+    # build on the node itself: only the .drv files leave the laptop, packages come from cache.nixos.org
     NIX_SSHOPTS="${SSH_OPTS[*]}" nix run nixpkgs#nixos-rebuild \
       --extra-experimental-features "nix-command flakes" \
       -- switch --flake "./nixos#$host" \
+      --build-host "$NIX_USER@$ip" \
       --target-host "$NIX_USER@$ip" --use-remote-sudo
   else
     echo "Installing NixOS on $host ($ip)"
+    # --build-on remote: the kexec installer builds the system and downloads packages itself
     nix run github:nix-community/nixos-anywhere \
       --extra-experimental-features "nix-command flakes" \
       -- --flake "./nixos#$host" \
+      --build-on remote \
       --extra-files "hosts/$host" \
       --target-host "debian@$ip"
   fi
