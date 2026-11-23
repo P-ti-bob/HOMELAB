@@ -9,6 +9,8 @@ repositories:
     url: https://kubernetes.github.io/ingress-nginx
   - name: external-dns
     url: https://kubernetes-sigs.github.io/external-dns/
+  - name: headlamp
+    url: https://kubernetes-sigs.github.io/headlamp/
 ---
 releases:
   # Distributed storage
@@ -50,3 +52,11 @@ releases:
       - ./values/externaldns.values.yaml
     secrets:
       - ./values/secrets/externaldns-pihole.secrets.yaml
+
+  # Headlamp - Kubernetes dashboard
+  - name: headlamp
+    namespace: headlamp
+    chart: headlamp/headlamp
+    version: 0.45.0
+    values:
+      - ./values/headlamp.values.yaml

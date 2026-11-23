@@ -1,8 +1,11 @@
 provider:
   name: pihole
 
+# Pi-hole only stores A/AAAA/CNAME records: the TXT ownership registry cannot work there
+# (it only logged "Skipping unsupported endpoint ... TXT"). upsert-only keeps external-dns
+# from ever deleting records, including the ones added by hand in Pi-hole.
+registry: noop
 policy: upsert-only
-txtOwnerId: "homelab"
 
 extraArgs:
   - --ingress-class=nginx-internal
